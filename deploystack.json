@@ -1,0 +1,13 @@
+{
+    "title":"OPS AGENT",
+    "description": "This process will create a VM with Logging enabled",
+	"duration":2,
+	"collect_project":true,
+	"collect_project_number":true,
+	"collect_zone":true,
+	"region_type":"compute",
+	"region_default":"us-central1",
+	"hard_settings":{
+		"basename":"opsagent"
+	}
+}

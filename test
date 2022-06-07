@@ -69,7 +69,7 @@ gcloud services enable cloudresourcemanager.googleapis.com --project=$PROJECT
 get_project_number PROJECT_NUMBER $PROJECT
 REGION=us-central1
 ZONE=us-central1-a
-BASENAME=simplevm
+BASENAME=opsagent
 
 gcloud config set project ${PROJECT}
 
@@ -78,14 +78,20 @@ terraform apply -auto-approve -var project_id="${PROJECT}" -var project_number="
 
 
 section_open "Test Instance"
-    evalTest 'gcloud compute instances describe $BASENAME-sample --zone="$ZONE" --format="value(name)"'  $BASENAME-sample
+    evalTest 'gcloud compute instances describe $BASENAME-instance --zone="$ZONE" --format="value(name)"'  $BASENAME-instance
 section_close
 
+sleep 60
+INSTANCEID=$(terraform output -raw instance_id)
+filter="jsonPayload.message:GCE Agent Started AND resource.labels.instance_id=${INSTANCEID}"
+section_open "Test Agent Install"
+    evalTest "gcloud logging read \"$filter\" --format=\"value(logName)\""  "projects/${PROJECT}/logs/GCEGuestAgent"
+section_close
 
 terraform destroy -auto-approve -var project_id="${PROJECT}" -var project_number="${PROJECT_NUMBER}" -var zone="${ZONE}" -var basename="${BASENAME}" 
 
 section_open "Test Instance"
-    evalTest 'gcloud compute instances describe $BASENAME-sample --zone="$ZONE" --format="value(name)"'  "EXPECTERROR"
+    evalTest 'gcloud compute instances describe $BASENAME-instance --zone="$ZONE" --format="value(name)"'  "EXPECTERROR"
 section_close
 
 

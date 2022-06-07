@@ -1,0 +1,3 @@
+This process will create and configure the following: 
+	* Compute Engine Instance
+    * Ops Agent for Logging and Monitoring
