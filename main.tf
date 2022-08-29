@@ -34,6 +34,25 @@ locals {
   sacompute = "${var.project_number}-compute@developer.gserviceaccount.com"
 }
 
+# Enabling services in your GCP project
+variable "gcp_service_list" {
+  description = "The list of apis necessary for the project"
+  type        = list(string)
+  default = [
+    "compute.googleapis.com",
+    "osconfig.googleapis.com",
+  ]
+}
+
+resource "google_project_service" "all" {
+  for_each                   = toset(var.gcp_service_list)
+  project                    = var.project_number
+  service                    = each.key
+  disable_dependent_services = false
+  disable_on_destroy         = false
+}
+
+
 
 // Terraform plugin for creating random ids
 resource "random_id" "instance_id" {
