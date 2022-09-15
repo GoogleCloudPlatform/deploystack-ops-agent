@@ -1,6 +1,7 @@
 {
     "title":"OPS AGENT",
     "description": "This process will create a VM with Logging enabled",
+	"documentation_link": "https://cloud.google.com/shell/docs/cloud-shell-tutorials/deploystack/ops-agent",
 	"duration":2,
 	"collect_project":true,
 	"collect_project_number":true,
